@@ -1,6 +1,6 @@
-# 🦇 PlaceOracle — Command Center Backend
+# 🦇 Auror — Command Center Backend
 
-> **Team:** Auror  
+> **Team:** Incognito  
 > **Lead Backend Developer:** Puranjay Sharma   
 > **Aesthetic:** Dark, Tactical "Batman/Oracle" Command Center  
 > **Mission:** Redefining campus recruitment and hackathon team formation by eliminating resume fraud through cryptographic & AI zero-day code verification.
