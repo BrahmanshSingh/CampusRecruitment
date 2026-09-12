@@ -6,7 +6,7 @@ export const mockAssessment = {
   difficulty: "ELITE TACTICAL",
   language: "javascript",
   prompt: `// MISSION OBJECTIVE:
-// You are defending the PlaceOracle recruitment gateway against a distributed Sybil attack.
+// You are defending the Auror recruitment gateway against a distributed Sybil attack.
 // Malicious agents are submitting synthetically inflated GitHub commits with spoofed timestamps
 // to bypass the verified Trust Index threshold.
 

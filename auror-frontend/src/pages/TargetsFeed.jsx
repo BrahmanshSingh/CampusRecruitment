@@ -1,33 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from '../components/Sidebar';
 import { MissionCard } from '../components/MissionCard';
 import { mockPlacements } from '../data/mockPlacements';
 import { useAuth } from '../context/AuthContext';
-import { Target, Search, Filter, CheckCircle2, Shield } from 'lucide-react';
+import { api } from '../services/api';
+import { Target, Search, Filter, CheckCircle2, Shield, Loader } from 'lucide-react';
 
 export function TargetsFeed() {
   const { user } = useAuth();
   const [filterTier, setFilterTier] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [appliedTarget, setAppliedTarget] = useState(null);
+  
+  const [placements, setPlacements] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchPlacements = async () => {
+      setIsLoading(true);
+      try {
+        const params = {};
+        if (searchQuery.trim()) params.query = searchQuery;
+        if (filterTier !== 'ALL') params.tier = filterTier;
+
+        const res = await api.placements.list(params);
+        if (mounted) {
+          if (res.placements && res.placements.length > 0) {
+            const mapped = res.placements.map(p => ({
+              id: p.id,
+              company: p.company_name,
+              role: p.role,
+              tier: p.ctc >= 30 ? 'TOP TIER' : (p.ctc >= 20 ? 'QUANTITATIVE' : 'TACTICAL'),
+              salary: `${p.ctc} LPA`,
+              requiredScore: 85,
+              tags: p.tech_stack || [],
+              desc: `High-clearance ${p.role} operative requested at ${p.company_name}. Cryptographic skill verification mandatory.`,
+            }));
+            setPlacements(mapped);
+          } else {
+            setPlacements([]); // Return empty if real filtering returns nothing
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch placements:", err);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchPlacements();
+    }, 300);
+
+    return () => { 
+      mounted = false; 
+      clearTimeout(debounceTimer);
+    };
+  }, [searchQuery, filterTier]);
 
   const tiers = ['ALL', 'TOP TIER', 'TACTICAL', 'QUANTITATIVE', 'INFRASTRUCTURE'];
 
-  const filteredPlacements = mockPlacements.filter((p) => {
-    const matchesTier = filterTier === 'ALL' || p.tier === filterTier;
-    const matchesSearch = 
-      p.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesTier && matchesSearch;
-  });
+  const filteredPlacements = placements; // Filtering is now done by backend
 
-  const handleEngage = (placement) => {
-    setAppliedTarget(placement);
-    setTimeout(() => {
-      // Auto dismiss notification after 4s
-      setAppliedTarget(null);
-    }, 4000);
+  const handleEngage = async (placement) => {
+    try {
+      await api.placements.apply(placement.id);
+      setAppliedTarget(placement);
+      setTimeout(() => {
+        setAppliedTarget(null);
+      }, 4000);
+    } catch (err) {
+      alert(err.message || 'Failed to apply to target');
+    }
   };
 
   return (
@@ -108,16 +153,23 @@ export function TargetsFeed() {
         )}
 
         {/* Grid of Targets */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPlacements.map((placement) => (
-            <MissionCard
-              key={placement.id}
-              placement={placement}
-              userTrustScore={user?.trustIndex || 94}
-              onEngage={handleEngage}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 text-[#00F0FF]">
+            <Loader className="w-8 h-8 animate-spin mb-4" />
+            <div className="font-mono text-xs animate-pulse">ESTABLISHING SECURE CONNECTION TO PLACEMENT GRID...</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPlacements.map((placement) => (
+              <MissionCard
+                key={placement.id}
+                placement={placement}
+                userTrustScore={user?.trustIndex || 94}
+                onEngage={handleEngage}
+              />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
-import { TrustRadar } from '../components/TrustRadar';
 import { SkillBadgeGrid } from '../components/SkillBadgeGrid';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -13,7 +12,8 @@ import {
   Cpu, 
   ExternalLink,
   ChevronRight,
-  GitCommit
+  GitCommit,
+  Activity
 } from 'lucide-react';
 
 export function Dashboard() {
@@ -68,10 +68,10 @@ export function Dashboard() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/arena')}
-                className="px-4 py-2.5 bg-[#FCE205] hover:bg-[#ffe600] text-black font-mono font-bold text-xs tracking-wider rounded-sm shadow-[0_0_15px_rgba(252,226,5,0.3)] transition-all flex items-center gap-2"
+                className="px-4 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-mono font-bold text-xs tracking-wider rounded-sm transition-all flex items-center gap-2"
               >
                 <Terminal className="w-4 h-4" />
-                ENTER ZERO-DAY ARENA
+                ASSESSMENT ARENA
               </button>
 
               <button
@@ -88,51 +88,56 @@ export function Dashboard() {
         {/* Section: Trust Radar & Telemetry Stream */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
           {/* Trust Radar Component (7 cols) */}
-          <div className="lg:col-span-8">
-            <TrustRadar
-              trustScore={user?.trustIndex || 94}
-              breakdown={{
-                integrity: user?.codeIntegrity || 97,
-                velocity: user?.commitVelocity || 92,
-                grade: user?.assessmentGrade || 95
-              }}
-            />
+          <div className="lg:col-span-8 flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-full">
+              <div className="bg-[#0C0F17] border border-[#1E2638] p-6 rounded-sm flex flex-col justify-center items-center text-center">
+                <ShieldCheck className="w-8 h-8 text-[#3b82f6] mb-2" />
+                <div className="text-3xl font-bold text-white">{user?.trustIndex || 50}</div>
+                <div className="text-xs font-mono text-slate-400 mt-1">TRUST SCORE</div>
+              </div>
+              <div className="bg-[#0C0F17] border border-[#1E2638] p-6 rounded-sm flex flex-col justify-center items-center text-center">
+                <GitCommit className="w-8 h-8 text-[#10b981] mb-2" />
+                <div className="text-3xl font-bold text-white">{user?.codeIntegrity || 50}</div>
+                <div className="text-xs font-mono text-slate-400 mt-1">CODE INTEGRITY</div>
+              </div>
+              <div className="bg-[#0C0F17] border border-[#1E2638] p-6 rounded-sm flex flex-col justify-center items-center text-center">
+                <Activity className="w-8 h-8 text-[#f59e0b] mb-2" />
+                <div className="text-3xl font-bold text-white">{user?.velocityScore || 50}</div>
+                <div className="text-xs font-mono text-slate-400 mt-1">COMMIT VELOCITY</div>
+              </div>
+            </div>
           </div>
 
           {/* Real-time Telemetry Stream (4 cols) */}
           <div className="lg:col-span-4 bg-[#0C0F17] border border-[#1E2638] p-5 rounded-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4 border-b border-[#1A2234] pb-2">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#00F0FF]">
-                  <Radio className="w-4 h-4 text-[#00F0FF] animate-pulse" />
-                  <span>AUDIT TELEMETRY STREAM</span>
+                <div className="flex items-center gap-2 text-xs font-mono text-[#3b82f6]">
+                  <Activity className="w-4 h-4 text-[#3b82f6]" />
+                  <span>ACTIVITY LOG</span>
                 </div>
-                <span className="w-2 h-2 rounded-full bg-[#00FF9D] animate-ping" />
               </div>
 
-              <div className="space-y-3 font-mono text-xs">
-                {user?.telemetryStream?.map((item) => (
+              <div className="space-y-3 font-mono text-xs max-h-64 overflow-y-auto">
+                {user?.telemetryStream?.length > 0 ? user.telemetryStream.map((item) => (
                   <div key={item.id} className="p-2.5 bg-[#07090F] border border-[#182030] rounded-sm">
                     <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1">
-                      <span>{item.timestamp}</span>
-                      <span className="text-[#00FF9D] font-bold">{item.score}</span>
+                      <span>{new Date(item.timestamp).toLocaleString()}</span>
+                      <span className="text-[#00FF9D] font-bold">{item.score_delta || item.score}</span>
                     </div>
                     <div className="text-slate-200 text-xs font-medium truncate">
-                      {item.event}
+                      {item.event_name || item.event}
                     </div>
                     <div className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
                       <GitCommit className="w-3 h-3 text-[#FCE205]" />
-                      <span>TX: {item.hash}</span>
+                      <span>TX: {item.tx_hash || item.hash}</span>
                     </div>
                   </div>
-                ))}
+                )) : <div className="text-slate-500 text-center py-4">No telemetry logs available.</div>}
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-[#182030] text-[10px] font-mono text-slate-500 flex justify-between">
-              <span>ZERO SYBIL ANOMALIES</span>
-              <span className="text-[#00FF9D]">ALL ENCLAVES ACTIVE</span>
-            </div>
+
           </div>
         </div>
 

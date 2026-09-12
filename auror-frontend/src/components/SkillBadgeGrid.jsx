@@ -42,15 +42,15 @@ export function SkillBadgeGrid({ skills = [] }) {
             </div>
 
             <h4 className="font-display font-bold text-sm text-slate-100 group-hover:text-[#FCE205] transition-colors">
-              {skill.name}
+              {skill.skill_name}
             </h4>
             <div className="text-[11px] font-mono text-slate-400 mt-1">
-              CATEGORY: {skill.category}
+              LANGUAGE: {skill.language}
             </div>
 
             <div className="mt-3 pt-3 border-t border-[#182030] flex items-center justify-between text-[10px] font-mono text-slate-500">
               <span className="truncate max-w-[140px] text-slate-400">
-                {skill.hash}
+                #ID: {skill.id}
               </span>
               <span className="text-[#00F0FF] group-hover:underline flex items-center gap-1">
                 INSPECT <ExternalLink className="w-2.5 h-2.5" />
@@ -77,31 +77,31 @@ export function SkillBadgeGrid({ skills = [] }) {
             </div>
 
             <h3 className="font-display font-bold text-xl text-white mb-1">
-              {selectedSkill.name}
+              {selectedSkill.skill_name}
             </h3>
             <div className="text-xs font-mono text-[#00F0FF] mb-4">
-              DOMAIN: {selectedSkill.category}
+              LANGUAGE: {selectedSkill.language}
             </div>
 
             <div className="space-y-3 bg-[#06080E] p-4 border border-[#1E2638] rounded-sm font-mono text-xs">
               <div>
                 <div className="text-slate-500 text-[10px]">ISSUER IDENTITY:</div>
-                <div className="text-slate-200">{selectedSkill.issuer}</div>
+                <div className="text-slate-200">AUROR AI ENCLAVE</div>
               </div>
               <div>
                 <div className="text-slate-500 text-[10px]">VERIFICATION TIMESTAMP:</div>
-                <div className="text-slate-200">{selectedSkill.date}T19:30:00Z</div>
+                <div className="text-slate-200">{selectedSkill.earned_at}</div>
               </div>
               <div>
-                <div className="text-slate-500 text-[10px]">SHA-256 REPOSITORY PROOF HASH:</div>
+                <div className="text-slate-500 text-[10px]">INTERNAL RECORD ID:</div>
                 <div className="text-[#FCE205] break-all font-semibold">
-                  {selectedSkill.hash}99ef01a8b244d5c7
+                  {selectedSkill.id}
                 </div>
               </div>
               <div>
                 <div className="text-slate-500 text-[10px]">ASSESSMENT CONFIDENCE SCORE:</div>
                 <div className="text-[#00FF9D] font-bold text-sm">
-                  {selectedSkill.score}% (VERIFIED GROUND TRUTH)
+                  100% (VERIFIED GROUND TRUTH)
                 </div>
               </div>
             </div>

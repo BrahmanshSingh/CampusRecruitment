@@ -46,45 +46,33 @@ export function LandingPage() {
       {/* Top Tactical Navigation */}
       <header className="border-b border-[#1A2234] bg-[#080B12]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-sm bg-[#0C0F18] border border-[#FCE205] flex items-center justify-center glow-gold">
-            <Shield className="w-5 h-5 text-[#FCE205]" />
+          <div className="w-9 h-9 rounded-sm bg-[#0C0F18] border border-[#3b82f6] flex items-center justify-center">
+            <Shield className="w-5 h-5 text-[#3b82f6]" />
           </div>
           <div>
             <span className="font-display font-black text-lg tracking-wider text-white">
-              PLACE<span className="text-[#FCE205]">ORACLE</span>
-            </span>
-            <span className="text-[10px] font-mono text-[#00F0FF] ml-2 px-1.5 py-0.5 border border-[#00F0FF]/30 rounded">
-              HACKATHON PROTOCOL
+              AUROR
             </span>
           </div>
         </div>
 
-        {/* Hackathon Identity Callout */}
-        <div className="hidden md:flex items-center gap-4 text-xs font-mono">
-          <div className="text-slate-400">
-            TEAM: <span className="text-white font-semibold">JACKED NERDS</span>
-          </div>
-          <div className="w-1 h-3 bg-slate-700"></div>
-          <div className="text-slate-400">
-            ARCHITECT: <span className="text-[#FCE205]">PURANJAY SHARMA (1024220072)</span>
-          </div>
-        </div>
+
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/dashboard')}
-            className="px-4 py-2 border border-[#1E273E] hover:border-[#FCE205] text-xs font-mono tracking-wider rounded-sm transition-all"
+            className="px-4 py-2 border border-[#1E273E] hover:border-[#3b82f6] text-xs font-mono tracking-wider rounded-sm transition-all"
           >
-            OPERATIVE PORTAL
+            DASHBOARD
           </button>
           
           <button
             onClick={handleAuth}
             disabled={isAuthenticating}
-            className="px-4 py-2 bg-[#FCE205] hover:bg-[#ffe600] text-black text-xs font-mono font-bold tracking-wider rounded-sm shadow-[0_0_15px_rgba(252,226,5,0.3)] transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs font-mono font-bold tracking-wider rounded-sm transition-all flex items-center gap-2"
           >
             <GithubIcon className="w-4 h-4" />
-            {isAuthenticating ? 'INITIATING HANDSHAKE...' : 'GITHUB HANDSHAKE'}
+            {isAuthenticating ? 'LOGGING IN...' : 'LOGIN WITH GITHUB'}
           </button>
         </div>
       </header>
@@ -96,14 +84,12 @@ export function LandingPage() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[#1E2638]/40 pointer-events-none -z-10" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-[#FCE205]/10 pointer-events-none -z-10" />
 
-          {/* Alert Tag */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121624] border border-[#FCE205]/40 text-xs font-mono text-[#FCE205] mb-6 glow-gold"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121624] border border-[#3b82f6]/40 text-xs font-mono text-[#3b82f6] mb-6"
           >
-            <span className="w-2 h-2 rounded-full bg-[#FCE205] animate-ping" />
-            TACTICAL ANTI-FRAUD VERIFICATION SYSTEM // ENTERPRISE SAAS
+            DEVELOPER VERIFICATION PLATFORM
           </motion.div>
 
           <motion.h1
@@ -113,7 +99,7 @@ export function LandingPage() {
             className="font-display font-black text-4xl sm:text-6xl md:text-7xl text-white tracking-tight leading-none mb-6"
           >
             ELIMINATE RESUME FRAUD.<br />
-            <span className="text-[#FCE205] text-glow-gold">PROVE REAL CODE.</span>
+            <span className="text-[#3b82f6]">PROVE REAL CODE.</span>
           </motion.h1>
 
           <motion.p
@@ -123,7 +109,7 @@ export function LandingPage() {
             className="max-w-3xl mx-auto text-slate-300 text-base sm:text-lg font-sans leading-relaxed mb-10"
           >
             Traditional resumes are saturated with AI-generated exaggerations and stolen repositories.
-            <strong className="text-white"> PlaceOracle</strong> establishes an immutable cryptographic trust barrier
+            <strong className="text-white"> Auror</strong> establishes an immutable cryptographic trust barrier
             using automated GitHub OAuth AST analysis and zero-day LLM coding challenges.
           </motion.p>
 
@@ -137,18 +123,18 @@ export function LandingPage() {
             <button
               onClick={handleAuth}
               disabled={isAuthenticating}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#FCE205] hover:bg-[#ffe600] text-black font-mono font-bold text-sm tracking-wider rounded-sm shadow-[0_0_25px_rgba(252,226,5,0.4)] transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-mono font-bold text-sm tracking-wider rounded-sm transition-all flex items-center justify-center gap-2"
             >
               <GithubIcon className="w-5 h-5" />
-              {isAuthenticating ? 'VERIFYING CREDENTIALS...' : '[ INITIATE GITHUB HANDSHAKE ]'}
+              {isAuthenticating ? 'VERIFYING CREDENTIALS...' : 'LOGIN WITH GITHUB'}
             </button>
 
             <button
               onClick={() => navigate('/arena')}
-              className="w-full sm:w-auto px-6 py-3.5 bg-[#101420] hover:bg-[#161C2C] border border-[#1E2638] hover:border-[#00F0FF] text-[#00F0FF] font-mono text-sm tracking-wider rounded-sm transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 bg-[#101420] hover:bg-[#161C2C] border border-[#1E2638] hover:border-[#3b82f6] text-[#3b82f6] font-mono text-sm tracking-wider rounded-sm transition-all flex items-center justify-center gap-2"
             >
               <Terminal className="w-4 h-4" />
-              LAUNCH ZERO-DAY ARENA DEMO
+              TRY ASSESSMENT DEMO
             </button>
           </motion.div>
         </section>
@@ -160,7 +146,7 @@ export function LandingPage() {
               THREAT SIMULATOR // LIVE DECOMPILATION
             </span>
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-white mt-1">
-              How PlaceOracle Intercepts Synthetic Resumes
+              How Auror Intercepts Synthetic Resumes
             </h2>
           </div>
 
@@ -194,7 +180,7 @@ export function LandingPage() {
               ))}
             </div>
 
-            {/* Right: PlaceOracle Real-time Deconstruction */}
+            {/* Right: Auror Real-time Deconstruction */}
             <div className="md:col-span-6 bg-[#080B12] border-2 border-[#1E2638] rounded-sm p-5 flex flex-col justify-between relative overflow-hidden font-mono text-xs">
               <div className="flex items-center justify-between border-b border-[#1A2234] pb-3 mb-4">
                 <div className="flex items-center gap-2 text-[#00F0FF]">
@@ -238,7 +224,7 @@ export function LandingPage() {
 
               <div className="mt-5 pt-3 border-t border-[#182030] flex items-center justify-between text-[10px] text-slate-500">
                 <span>PROTOCOL: SHA-256 VERIFIED</span>
-                <span className="text-[#FCE205]">PLACEORACLE CORE</span>
+                <span className="text-[#FCE205]">AUROR CORE</span>
               </div>
             </div>
           </div>
@@ -276,7 +262,7 @@ export function LandingPage() {
                 Zero-Day LLM Assessments
               </h3>
               <p className="text-xs text-slate-400 font-sans leading-relaxed">
-                LeetCode problems are leaked and memorized. PlaceOracle crafts real-time dynamic algorithmic challenges with zero public search footprint, solved in a lockdown browser sandbox.
+                LeetCode problems are leaked and memorized. Auror crafts real-time dynamic algorithmic challenges with zero public search footprint, solved in a lockdown browser sandbox.
               </p>
             </div>
 
@@ -298,7 +284,7 @@ export function LandingPage() {
       {/* Tactical Footer */}
       <footer className="border-t border-[#182030] bg-[#07090F] px-6 py-6 text-xs font-mono text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          PLACEORACLE // JACKED NERDS HACKATHON PROTOCOL · LEAD ARCHITECT: PURANJAY SHARMA (1024220072)
+          AUROR // JACKED NERDS HACKATHON PROTOCOL · LEAD ARCHITECT: PURANJAY SHARMA (1024220072)
         </div>
         <div className="flex items-center gap-4 text-[11px]">
           <span className="text-[#00FF9D]">● SYSTEM DEPLOYED</span>

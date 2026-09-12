@@ -11,7 +11,7 @@ export const mockPlacements = [
     deadline: "2026-10-15",
     tags: ["LLM Kernels", "C++20", "Distributed Systems", "CUDA"],
     status: "ACTIVE_HUNT",
-    description: "Architect ultra-low-latency neural inference clusters. Zero tolerance for hallucinated credentials; PlaceOracle cryptographic clearance strictly enforced."
+    description: "Architect ultra-low-latency neural inference clusters. Zero tolerance for hallucinated credentials; Auror cryptographic clearance strictly enforced."
   },
   {
     id: "target-02",
@@ -25,7 +25,7 @@ export const mockPlacements = [
     deadline: "2026-09-30",
     tags: ["Threat Detection", "React/TypeScript", "Defense Tech", "Distributed Graph"],
     status: "ACTIVE_HUNT",
-    description: "Mission-critical deployment for real-time threat intelligence pipelines. Requires proven codebase ownership verified through PlaceOracle GitHub hash validation."
+    description: "Mission-critical deployment for real-time threat intelligence pipelines. Requires proven codebase ownership verified through Auror GitHub hash validation."
   },
   {
     id: "target-03",
@@ -39,7 +39,7 @@ export const mockPlacements = [
     deadline: "2026-10-01",
     tags: ["Reinforcement Learning", "Rust", "Safety Invariants", "Python"],
     status: "ACTIVE_HUNT",
-    description: "Design real-time verification boundaries for recursive agent swarms. Applicants must complete PlaceOracle Zero-Day Arena challenge 0x7F."
+    description: "Design real-time verification boundaries for recursive agent swarms. Applicants must complete Auror Zero-Day Arena challenge 0x7F."
   },
   {
     id: "target-04",
@@ -81,6 +81,6 @@ export const mockPlacements = [
     deadline: "2026-11-01",
     tags: ["Metal", "Swift", "Neural Engine", "Spatial Computing"],
     status: "STANDBY",
-    description: "Next-generation embedded perception platform. PlaceOracle automated skill telemetry used to bypass initial technical screen."
+    description: "Next-generation embedded perception platform. Auror automated skill telemetry used to bypass initial technical screen."
   }
 ];

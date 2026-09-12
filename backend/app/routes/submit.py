@@ -97,6 +97,35 @@ def submit_solution():
 
     verification.verdict = grade_result["verdict"]
     verification.llm_feedback = grade_result["feedback"]
+    
+    # Increment Trust Score and Telemetry if pass
+    if verification.verdict == "pass":
+        from app.models.telemetry import TelemetryEvent
+        from app.models.user import User
+        from app.models.skill_badge import SkillBadge
+        import hashlib
+        
+        user = db.session.get(User, user_id)
+        if user:
+            user.trust_score = min(100, user.trust_score + 5)
+            
+            tx_hash = "0x" + hashlib.sha256(f"submit-{verification.id}-{user.trust_score}".encode()).hexdigest()[:16]
+            telemetry = TelemetryEvent(
+                user_id=user.id,
+                event_name="Zero-Day Challenge Solved & Validated",
+                score_delta="+5 pts",
+                tx_hash=tx_hash
+            )
+            db.session.add(telemetry)
+
+            # Mint Skill Badge
+            badge = SkillBadge(
+                user_id=user.id,
+                skill_name=verification.claimed_skill,
+                language=verification.language
+            )
+            db.session.add(badge)
+
     db.session.commit()
 
     return jsonify({

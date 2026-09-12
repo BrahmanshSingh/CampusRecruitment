@@ -27,7 +27,7 @@ export const mockUser = {
       score: 98,
       verified: true,
       hash: "0x9e7a2b54...38f1",
-      issuer: "PlaceOracle Zero-Day Engine",
+      issuer: "Auror Zero-Day Engine",
       date: "2026-09-12"
     },
     {
@@ -67,7 +67,7 @@ export const mockUser = {
       score: 94,
       verified: true,
       hash: "0x6e2aa017...fa43",
-      issuer: "PlaceOracle Handshake Layer",
+      issuer: "Auror Handshake Layer",
       date: "2026-09-07"
     },
     {

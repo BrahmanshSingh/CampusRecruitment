@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt
 from marshmallow import ValidationError
 from app.extensions import db
 from app.models.placement import Placement
+from app.models.application import JobApplication
 from app.schemas import PlacementSchema, PlacementIngestRequestSchema
 from app.services.ingest_parser import parse_placement_email
 
@@ -100,10 +101,63 @@ def list_placements():
     if not uni_id:
         return jsonify({"error": "No university_id associated with this identity"}), 403
 
+    query_str = request.args.get("query", "").strip().lower()
+    tier_str = request.args.get("tier", "").strip()
+
     # MULTI-TENANT ISOLATION: Never return records from outside caller's university
-    records = Placement.query.filter_by(university_id=uni_id).order_by(Placement.ingested_at.desc()).all()
+    base_query = Placement.query.filter_by(university_id=uni_id)
+
+    if query_str:
+        # Search by company name or role
+        base_query = base_query.filter(
+            db.or_(
+                db.func.lower(Placement.company_name).contains(query_str),
+                db.func.lower(Placement.role).contains(query_str)
+            )
+        )
+
+    records = base_query.order_by(Placement.ingested_at.desc()).all()
+
+    # Note: tech_stack is stored as JSON, so exact substring on list isn't trivial in SQLite without json1, but company/role is covered.
+    # tier filtering (tier logic was dynamically on frontend based on ctc)
+    # We apply tier filtering in memory or add Tier column to DB. Since we don't have Tier in DB, we'll do memory filter for tier.
+    filtered_records = []
+    for p in records:
+        computed_tier = 'TOP TIER' if p.ctc and p.ctc >= 30 else ('QUANTITATIVE' if p.ctc and p.ctc >= 20 else 'TACTICAL')
+        if tier_str and tier_str != "ALL" and computed_tier != tier_str:
+            continue
+        filtered_records.append(p)
+
     return jsonify({
         "university_id": uni_id,
-        "count": len(records),
-        "placements": placements_schema.dump(records)
+        "count": len(filtered_records),
+        "placements": placements_schema.dump(filtered_records)
     }), 200
+
+@ingest_bp.route("/placements/<int:placement_id>/apply", methods=["POST"])
+@jwt_required()
+def apply_placement(placement_id):
+    """
+    Apply to a specific placement
+    """
+    claims = get_jwt()
+    user_id = claims.get("user_id")
+    uni_id = claims.get("university_id")
+    
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    placement = Placement.query.filter_by(id=placement_id, university_id=uni_id).first()
+    if not placement:
+        return jsonify({"error": "Placement not found or unauthorized"}), 404
+
+    # Check if already applied
+    existing = JobApplication.query.filter_by(user_id=user_id, placement_id=placement_id).first()
+    if existing:
+        return jsonify({"error": "Already applied"}), 400
+
+    application = JobApplication(user_id=user_id, placement_id=placement_id)
+    db.session.add(application)
+    db.session.commit()
+
+    return jsonify({"message": "Application submitted successfully", "application_id": application.id}), 201

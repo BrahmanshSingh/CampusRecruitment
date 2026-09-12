@@ -19,6 +19,22 @@ class UniversitySchema(SQLAlchemyAutoSchema):
         include_relationships = False
 
 
+from app.models.telemetry import TelemetryEvent
+
+class TelemetryEventSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = TelemetryEvent
+        load_instance = True
+        include_fk = True
+
+from app.models.skill_badge import SkillBadge
+
+class SkillBadgeSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = SkillBadge
+        load_instance = True
+        include_fk = True
+
 class UserSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = User
@@ -27,9 +43,19 @@ class UserSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     university_name = fields.Method("get_university_name", dump_only=True)
+    telemetryStream = fields.Method("get_telemetry_stream", dump_only=True)
+    skills = fields.Method("get_skills", dump_only=True)
 
     def get_university_name(self, obj):
         return obj.university.name if obj.university else None
+
+    def get_telemetry_stream(self, obj):
+        schema = TelemetryEventSchema(many=True)
+        return schema.dump(obj.telemetry_events)
+
+    def get_skills(self, obj):
+        schema = SkillBadgeSchema(many=True)
+        return schema.dump(obj.badges)
 
 
 class PlacementSchema(SQLAlchemyAutoSchema):

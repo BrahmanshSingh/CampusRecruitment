@@ -159,6 +159,7 @@ def dev_token():
         db.session.commit()
 
     user = User.query.filter_by(username=username).first()
+    is_new = False
     if not user:
         user = User(
             github_id=f"dev_{username}",
@@ -169,6 +170,13 @@ def dev_token():
         )
         db.session.add(user)
         db.session.commit()
+        is_new = True
+
+    # Trigger async github audit for new logins (or always for demo purposes)
+    import threading
+    from app.services.git_auditor import GitHubAuditor
+    _app = current_app._get_current_object()
+    threading.Thread(target=GitHubAuditor.audit_github_user, args=(_app, user.id, username), daemon=True).start()
 
     claims = {
         "role": user.role,

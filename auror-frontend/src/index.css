@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-void: #060709;
+    --bg-panel: #0d1017;
+    --bg-card: #121622;
+    --border-tactical: #1e2436;
+    --border-highlight: #fce205;
+    --accent-gold: #fce205;
+    --accent-cyan: #00f0ff;
+    --accent-green: #00ff9d;
+    --accent-red: #ff334b;
+  }
+
+  * {
+    border-color: #1e2436;
+  }
+
+  body {
+    background-color: #060709;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+/* Custom Tactical Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090c12;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2738;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fce205;
+}
+
+/* Tactical Background Grid Pattern (Simplified) */
+.bg-tactical-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+.bg-radial-vignette {
+  background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.03) 0%, rgba(6, 7, 9, 0.95) 70%, #060709 100%);
+}
+
+/* Pulsing Badge & Border */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}

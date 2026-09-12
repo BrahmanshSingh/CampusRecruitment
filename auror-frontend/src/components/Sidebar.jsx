@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Shield, 
@@ -11,10 +11,30 @@ import {
   Radio
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 
 export function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const checkHealth = async () => {
+      try {
+        await api.health.check();
+        if (mounted) setIsOnline(true);
+      } catch (err) {
+        if (mounted) setIsOnline(false);
+      }
+    };
+    checkHealth();
+    const interval = setInterval(checkHealth, 30000); // Check every 30s
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -22,9 +42,9 @@ export function Sidebar() {
   };
 
   const navItems = [
-    { name: 'ORACLE DASHBOARD', path: '/dashboard', icon: Activity },
-    { name: 'TARGETS FEED', path: '/targets', icon: Target },
-    { name: 'ASSESSMENT ARENA', path: '/arena', icon: Terminal },
+    { name: 'Dashboard', path: '/dashboard', icon: Activity },
+    { name: 'Job Board', path: '/targets', icon: Target },
+    { name: 'Assessment Arena', path: '/arena', icon: Terminal },
   ];
 
   return (
@@ -33,32 +53,31 @@ export function Sidebar() {
         {/* Brand Header */}
         <div className="p-5 border-b border-[#1B2232]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-sm bg-[#060709] border border-[#FCE205] flex items-center justify-center glow-gold">
-              <Shield className="w-5 h-5 text-[#FCE205]" />
+            <div className="w-10 h-10 rounded-sm bg-[#060709] border border-[#3b82f6] flex items-center justify-center">
+              <Shield className="w-5 h-5 text-[#3b82f6]" />
             </div>
             <div>
               <div className="font-display font-bold tracking-wider text-base text-white flex items-center gap-2">
-                PLACE<span className="text-[#FCE205]">ORACLE</span>
+                AUROR
               </div>
-              <div className="text-[10px] font-mono tracking-widest text-[#00F0FF] uppercase">
-                v2.4 // PROTOCOL
+              <div className="text-[10px] font-mono tracking-widest text-[#3b82f6] uppercase">
+                DEVELOPER PORTAL
               </div>
             </div>
           </div>
           
           <div className="mt-3 px-2 py-1 bg-[#111624] border border-[#1E2638] rounded text-[11px] font-mono flex items-center justify-between text-slate-400">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#00FF9D] animate-pulse"></span>
-              SYS: ONLINE
+              <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#10b981]' : 'bg-[#ef4444]'}`}></span>
+              System: {isOnline ? 'Online' : 'Offline'}
             </span>
-            <span className="text-[#FCE205]">NET-99</span>
           </div>
         </div>
 
         {/* Navigation Items */}
         <nav className="p-4 space-y-1">
           <div className="text-[10px] font-mono text-slate-500 tracking-widest px-3 py-1 uppercase">
-            OPERATIVE INTERFACE
+            NAVIGATION
           </div>
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -81,22 +100,7 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* Tactical Telemetry Badge */}
-        <div className="px-4 py-3 mx-4 mt-4 bg-[#06080E] border border-[#1C2335] rounded-sm">
-          <div className="flex items-center justify-between text-[11px] font-mono mb-2">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Fingerprint className="w-3.5 h-3.5 text-[#00F0FF]" />
-              SYBIL SENTINEL
-            </span>
-            <span className="text-[#00FF9D] font-semibold">CLEAN</span>
-          </div>
-          <div className="w-full bg-[#131826] h-1.5 rounded-full overflow-hidden">
-            <div className="bg-[#00FF9D] h-full w-full"></div>
-          </div>
-          <div className="mt-2 text-[10px] font-mono text-slate-500">
-            Hash: 0x8f4c...30ea verified
-          </div>
-        </div>
+
       </div>
 
       {/* Operative Footer */}
@@ -121,8 +125,8 @@ export function Sidebar() {
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#111624] hover:bg-[#1B2338] border border-[#1E273D] text-slate-300 hover:text-white rounded-sm font-mono text-[11px] tracking-wider transition-all"
         >
-          <LogOut className="w-3.5 h-3.5 text-[#FF334B]" />
-          TERMINATE SESSION
+          <LogOut className="w-3.5 h-3.5 text-[#ef4444]" />
+          LOGOUT
         </button>
       </div>
     </aside>
