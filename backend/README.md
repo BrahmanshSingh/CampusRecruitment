@@ -1,7 +1,7 @@
 # 🦇 PlaceOracle — Command Center Backend
 
-> **Team:** Jacked Nerds  
-> **Lead Developer:** Puranjay Sharma (ID: 1024220072)  
+> **Team:** Auror  
+> **Lead Backend Developer:** Puranjay Sharma   
 > **Aesthetic:** Dark, Tactical "Batman/Oracle" Command Center  
 > **Mission:** Redefining campus recruitment and hackathon team formation by eliminating resume fraud through cryptographic & AI zero-day code verification.
 
