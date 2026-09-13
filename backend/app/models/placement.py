@@ -7,11 +7,13 @@ class Placement(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     
-    # HARD DATA ISOLATION PER UNIVERSITY
-    university_id = db.Column(db.Integer, db.ForeignKey("universities.id"), nullable=False, index=True)
+    # DATA ISOLATION PER UNIVERSITY OR GLOBAL IF OFF-CAMPUS
+    university_id = db.Column(db.Integer, db.ForeignKey("universities.id"), nullable=True, index=True)
+    is_off_campus = db.Column(db.Boolean, default=False, nullable=False)
     
     company_name = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(255), nullable=True)
+    apply_url = db.Column(db.String(512), nullable=True)
     ctc = db.Column(db.Float, nullable=True)  # in LPA
     _tech_stack = db.Column("tech_stack", db.Text, nullable=True) # JSON serialized string
     

@@ -9,6 +9,7 @@ import { Target, Search, Filter, CheckCircle2, Shield, Loader } from 'lucide-rea
 export function TargetsFeed() {
   const { user } = useAuth();
   const [filterTier, setFilterTier] = useState('ALL');
+  const [filterDomain, setFilterDomain] = useState('in-campus');
   const [searchQuery, setSearchQuery] = useState('');
   const [appliedTarget, setAppliedTarget] = useState(null);
   
@@ -23,6 +24,7 @@ export function TargetsFeed() {
         const params = {};
         if (searchQuery.trim()) params.query = searchQuery;
         if (filterTier !== 'ALL') params.tier = filterTier;
+        if (filterDomain) params.domain = filterDomain;
 
         const res = await api.placements.list(params);
         if (mounted) {
@@ -36,6 +38,7 @@ export function TargetsFeed() {
               requiredScore: 85,
               tags: p.tech_stack || [],
               desc: `High-clearance ${p.role} operative requested at ${p.company_name}. Cryptographic skill verification mandatory.`,
+              apply_url: p.apply_url,
             }));
             setPlacements(mapped);
           } else {
@@ -57,7 +60,7 @@ export function TargetsFeed() {
       mounted = false; 
       clearTimeout(debounceTimer);
     };
-  }, [searchQuery, filterTier]);
+  }, [searchQuery, filterTier, filterDomain]);
 
   const tiers = ['ALL', 'TOP TIER', 'TACTICAL', 'QUANTITATIVE', 'INFRASTRUCTURE'];
 
@@ -105,6 +108,30 @@ export function TargetsFeed() {
               ALL CLEARANCES UNLOCKED
             </span>
           </div>
+        </div>
+
+        {/* Domain Toggle (In-Campus vs Off-Campus) */}
+        <div className="flex bg-[#0C0F17] p-1 rounded-sm border border-[#1E2638] w-fit mb-4">
+          <button
+            onClick={() => setFilterDomain('in-campus')}
+            className={`px-4 py-1.5 font-mono text-xs tracking-wider transition-all ${
+              filterDomain === 'in-campus' 
+                ? 'bg-[#00FF9D] text-black font-bold shadow-[0_0_10px_rgba(0,255,157,0.3)]' 
+                : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            IN-CAMPUS (RESTRICTED)
+          </button>
+          <button
+            onClick={() => setFilterDomain('off-campus')}
+            className={`px-4 py-1.5 font-mono text-xs tracking-wider transition-all ${
+              filterDomain === 'off-campus' 
+                ? 'bg-[#00F0FF] text-black font-bold shadow-[0_0_10px_rgba(0,240,255,0.3)]' 
+                : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            OFF-CAMPUS (GLOBAL)
+          </button>
         </div>
 
         {/* Search & Tier Filters */}

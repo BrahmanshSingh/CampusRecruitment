@@ -5,12 +5,16 @@ from flask import current_app
 class GitHubOAuthService:
     @classmethod
     def get_authorization_url(cls, state: Optional[str] = None) -> str:
-        client_id = current_app.config.get("GITHUB_CLIENT_ID")
-        redirect_uri = current_app.config.get("GITHUB_CALLBACK_URL")
-        scope = "read:user user:email"
-        url = f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope={scope}"
+        import urllib.parse
+        params = {
+            "client_id": current_app.config.get("GITHUB_CLIENT_ID"),
+            "redirect_uri": current_app.config.get("GITHUB_CALLBACK_URL"),
+            "scope": "read:user user:email"
+        }
         if state:
-            url += f"&state={state}"
+            params["state"] = state
+            
+        url = "https://github.com/login/oauth/authorize?" + urllib.parse.urlencode(params)
         return url
 
     @classmethod

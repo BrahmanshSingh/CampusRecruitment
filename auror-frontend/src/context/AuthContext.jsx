@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { mockUser } from '../data/mockUser';
 import { api } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -33,15 +32,34 @@ export function AuthProvider({ children }) {
   // Attempt to re-authenticate / fetch profile on mount if token exists
   useEffect(() => {
     const initAuth = async () => {
-      if (token && !user) {
+      let currentToken = token;
+      
+      // Capture token from URL if we just redirected back from GitHub OAuth
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlToken = urlParams.get('token');
+      
+      if (urlToken) {
+        currentToken = urlToken;
+        setToken(urlToken);
+        // Remove token from the URL for security and clean UI
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      if (currentToken && !user) {
         try {
+          // Since the API client might not have the new token in localStorage yet,
+          // it will automatically pick it up if we set it in localStorage here first,
+          // or we ensure the API client reads the latest token from localStorage.
+          if (urlToken) {
+             localStorage.setItem('auror_token', urlToken);
+          }
+          
           const res = await api.auth.getMe();
           setUser({
-            ...mockUser,
             id: res.user.id,
             name: res.user.username,
             team: res.claims.university_id === 1 ? 'Jacked Nerds' : 'Other',
-            avatar: res.user.avatar_url || mockUser.avatar,
+            avatar: res.user.avatar_url || 'https://github.com/identicons/default.png',
             trustIndex: res.user.trust_score,
             codeIntegrity: res.user.code_integrity,
             velocityScore: res.user.velocity_score,
@@ -52,9 +70,6 @@ export function AuthProvider({ children }) {
           console.error("Session expired or backend unavailable", err);
           logout();
         }
-      } else if (!token) {
-        // For development/hackathon, auto-login if no token
-        loginWithGitHub();
       }
     };
     initAuth();

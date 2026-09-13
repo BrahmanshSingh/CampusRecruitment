@@ -71,6 +71,7 @@ export const api = {
       const queryParams = new URLSearchParams();
       if (params.query) queryParams.append('query', params.query);
       if (params.tier && params.tier !== 'ALL') queryParams.append('tier', params.tier);
+      if (params.domain) queryParams.append('domain', params.domain);
       const qs = queryParams.toString();
       return apiRequest(`/ingest/placements${qs ? `?${qs}` : ''}`, { method: 'GET' });
     },

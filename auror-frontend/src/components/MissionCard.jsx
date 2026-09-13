@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Target, Shield, Clock, MapPin, DollarSign, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Target, Shield, Clock, MapPin, DollarSign, ChevronRight, CheckCircle2, ExternalLink } from 'lucide-react';
 
 export function MissionCard({ placement, userTrustScore = 94, onEngage }) {
   const [showBrief, setShowBrief] = useState(false);
@@ -7,6 +7,10 @@ export function MissionCard({ placement, userTrustScore = 94, onEngage }) {
   const isCleared = userTrustScore >= placement.minTrust;
 
   const handleEngageClick = async () => {
+    if (placement.apply_url) {
+      window.open(placement.apply_url, '_blank');
+      return;
+    }
     setIsEngaging(true);
     await onEngage(placement);
     setIsEngaging(false);
@@ -88,7 +92,7 @@ export function MissionCard({ placement, userTrustScore = 94, onEngage }) {
             }`}
           >
             {!isCleared ? 'LOCKED (LOW TRUST)' : isEngaging ? 'APPLYING...' : 'APPLY NOW'}
-            {isCleared && !isEngaging && <ChevronRight className="w-3.5 h-3.5" />}
+            {isCleared && !isEngaging && (placement.apply_url ? <ExternalLink className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />)}
           </button>
         </div>
       </div>
@@ -140,10 +144,11 @@ export function MissionCard({ placement, userTrustScore = 94, onEngage }) {
             <div className="flex gap-3">
               <button
                 onClick={handleEngageClick}
-                disabled={isEngaging}
-                className="w-full py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:bg-[#3b82f6]/50 disabled:cursor-not-allowed text-white font-mono font-bold text-xs tracking-wider rounded-sm transition-all"
+                disabled={isEngaging && !placement.apply_url}
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:bg-[#3b82f6]/50 disabled:cursor-not-allowed text-white font-mono font-bold text-xs tracking-wider rounded-sm transition-all"
               >
-                {isEngaging ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}
+                {isEngaging && !placement.apply_url ? 'SUBMITTING...' : placement.apply_url ? 'OPEN EXTERNAL PORTAL' : 'SUBMIT APPLICATION'}
+                {placement.apply_url && <ExternalLink className="w-4 h-4" />}
               </button>
             </div>
           </div>

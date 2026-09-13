@@ -1,5 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Montserrat:wght@300;400;600&display=swap');
 @import "tailwindcss";
 
+/* Batman UI UX Parallax Layers */
+.parallax-wrapper {
+  position: relative;
+  height: 150vh; /* Extra height to allow scrolling */
+  overflow: hidden;
+}
+
+.canvas-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.city-section {
+  position: relative;
+  min-height: 100vh;
+  background-color: transparent;
+  z-index: 4;
+}
 @layer base {
   :root {
     --bg-void: #060709;

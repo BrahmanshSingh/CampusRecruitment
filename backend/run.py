@@ -3,9 +3,11 @@ from app import create_app
 from app.services.job_scraper import JobScraper
 
 app = create_app()
-
 scraper = JobScraper(app)
-scraper.start()
+try:
+    scraper.start()
+except Exception as e:
+    print(f"[*] Warning: JobScraper failed to start (likely Gemini quota exhausted): {e}")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

@@ -57,7 +57,11 @@ def email_webhook():
         return jsonify({"errors": err.messages}), 400
 
     raw_email = validated_data["raw_email"]
-    university_id = json_data.get("university_id", 1) # Default to tenant 1 if not specified
+    is_off_campus = json_data.get("is_off_campus", False)
+    if is_off_campus:
+        university_id = None
+    else:
+        university_id = json_data.get("university_id", 1) # Default to tenant 1 if not specified
 
     try:
         # LLM Gateway extracts structured parameters
@@ -67,9 +71,11 @@ def email_webhook():
 
     placement = Placement(
         university_id=university_id,
+        is_off_campus=is_off_campus,
         company_name=extracted["company_name"],
         role=extracted["role"],
         ctc=extracted["ctc"],
+        apply_url=extracted["apply_url"],
         source_raw=raw_email
     )
     placement.tech_stack = extracted["tech_stack"]
@@ -103,9 +109,13 @@ def list_placements():
 
     query_str = request.args.get("query", "").strip().lower()
     tier_str = request.args.get("tier", "").strip()
+    domain_str = request.args.get("domain", "in-campus").strip().lower()
 
-    # MULTI-TENANT ISOLATION: Never return records from outside caller's university
-    base_query = Placement.query.filter_by(university_id=uni_id)
+    if domain_str == "off-campus":
+        base_query = Placement.query.filter_by(is_off_campus=True)
+    else:
+        # MULTI-TENANT ISOLATION: Never return records from outside caller's university
+        base_query = Placement.query.filter_by(university_id=uni_id)
 
     if query_str:
         # Search by company name or role
@@ -147,7 +157,10 @@ def apply_placement(placement_id):
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
 
-    placement = Placement.query.filter_by(id=placement_id, university_id=uni_id).first()
+    placement = Placement.query.filter(
+        (Placement.id == placement_id) & 
+        ((Placement.university_id == uni_id) | (Placement.is_off_campus == True))
+    ).first()
     if not placement:
         return jsonify({"error": "Placement not found or unauthorized"}), 404
 

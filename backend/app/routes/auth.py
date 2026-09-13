@@ -113,11 +113,8 @@ def github_callback():
         additional_claims=additional_claims
     )
 
-    return jsonify({
-        "message": "Authentication successful",
-        "access_token": access_token,
-        "user": user_schema.dump(user)
-    }), 200
+    frontend_url = current_app.config.get("FRONTEND_URL", "http://localhost:5173")
+    return redirect(f"{frontend_url}/dashboard?token={access_token}")
 
 @auth_bp.route("/dev-token", methods=["POST"])
 def dev_token():

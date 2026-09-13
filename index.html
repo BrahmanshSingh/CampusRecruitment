@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Auror </title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Montserrat:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #050914;
+            /* Deep Gotham Night Blue/Black */
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #fce205;
+            /* Bat-signal yellow */
+        }
+
+        /* Parallax Container */
+        .parallax-wrapper {
+            position: relative;
+            height: 150vh;
+            /* Extra height to allow scrolling */
+        }
+
+        /* Background Layer: Moon & Rain (Slower scroll) */
+        .layer-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            /* Placeholder for the rainy moon background */
+            background-image: linear-gradient(rgba(5, 9, 20, 0.3), rgba(5, 9, 20, 0.8)), url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        /* Foreground Layer: Batman on Gargoyle (Faster scroll) */
+        .layer-fg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            /* Placeholder for a transparent PNG of Batman on the edge */
+            background-image: url('https://images.unsplash.com/photo-1608889175250-c3b0c1667d3a?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: bottom center;
+            z-index: 2;
+            /* We use a mask to simulate a transparent foreground for the demo */
+            -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+        }
+
+        /* Text Content Overlays */
+        .content-block {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 3;
+            padding: 0 20px;
+        }
+
+        .hero-text {
+            top: 35vh;
+        }
+
+        .secondary-text {
+            top: 110vh;
+            /* Positioned further down to appear on scroll */
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #d1d5db;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .cta-btn {
+            padding: 15px 40px;
+            border: 1px solid #fff;
+            background-color: transparent;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .cta-btn:hover {
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Second Section (The wide city view) */
+        .city-section {
+            position: relative;
+            height: 100vh;
+            background-color: #050914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4;
+            /* Placeholder for the wide Lego Gotham City shot */
+            background-image: linear-gradient(to bottom, #050914 0%, rgba(5, 9, 20, 0.5) 50%, #050914 100%), url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* Simple CSS parallax for the second section */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#">About</a>
+        <a href="#">Projects</a>
+        <a href="#">Careers</a>
+        <a href="#">FAQ</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <!-- Parallax Hero Area -->
+    <div class="parallax-wrapper">
+        <!-- Background Layer (Moon) -->
+        <div class="layer-bg" id="bg-layer"></div>
+
+        <!-- Foreground Layer (Batman) -->
+        <div class="layer-fg" id="fg-layer"></div>
+
+        <!-- First Text Block -->
+        <div class="content-block hero-text" id="text-layer-1">
+            <h1>Auror</h1>
+            <p>The city sleeps, but the Dark Knight never rests. Step into a world crafted for heroes and villains
+                alike.</p>
+            <button class="cta-btn">Join The Patrol</button>
+        </div>
+
+        <!-- Second Text Block (Reveals on scroll) -->
+        <div class="content-block secondary-text" id="text-layer-2">
+            <h1>OUR SHOWCASE,<br>YOUR ADVENTURE!</h1>
+            <p>Explore the sprawling metropolis. Every alleyway tells a story, every shadow hides a secret.</p>
+            <button class="cta-btn">Unleash The Bat</button>
+        </div>
+    </div>
+
+    <!-- Static City Section -->
+    <div class="city-section">
+        <div class="content-block" style="position: relative;">
+            <h1>THE NIGHT IS DARKEST<br>JUST BEFORE THE DAWN</h1>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for smooth multi-layered parallax
+        window.addEventListener('scroll', () => {
+            let scrollPosition = window.pageYOffset;
+
+            const bgLayer = document.getElementById('bg-layer');
+            const fgLayer = document.getElementById('fg-layer');
+            const text1 = document.getElementById('text-layer-1');
+            const text2 = document.getElementById('text-layer-2');
+
+            // Background moves slightly down (slower)
+            bgLayer.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+
+            // Foreground moves up slightly faster to create 3D depth
+            fgLayer.style.transform = `translateY(${scrollPosition * -0.15}px)`;
+
+            // Text layers fade out and move up
+            text1.style.transform = `translateY(${scrollPosition * 0.4}px)`;
+            text1.style.opacity = 1 - (scrollPosition / 400);
+
+            // Second text layer comes up faster
+            text2.style.transform = `translateY(${scrollPosition * -0.2}px)`;
+        });
+    </script>
+</body>
+
+</html>
