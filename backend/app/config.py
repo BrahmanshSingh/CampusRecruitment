@@ -10,8 +10,11 @@ load_dotenv(dotenv_path=env_path, override=True)
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "placeoracle-default-secret-key")
     
+    is_vercel = os.getenv("VERCEL") == "1"
+    default_db_url = "sqlite:////tmp/placeoracle.db" if is_vercel else "sqlite:///placeoracle.db"
+    
     # DB Configuration
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///placeoracle.db")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", default_db_url)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT Configuration

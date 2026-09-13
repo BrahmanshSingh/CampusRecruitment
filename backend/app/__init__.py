@@ -2,8 +2,15 @@ from flask import Flask, jsonify
 from app.config import Config
 from app.extensions import db, ma, jwt, migrate, swagger, cors
 
+import os
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    # Detect Vercel / AWS Lambda environment where filesystem is read-only
+    is_serverless = "/var/task" in __file__
+    
+    if is_serverless:
+        app = Flask(__name__, instance_path="/tmp/instance")
+    else:
+        app = Flask(__name__)
     app.config.from_object(config_class)
 
     # Initialize Extensions
